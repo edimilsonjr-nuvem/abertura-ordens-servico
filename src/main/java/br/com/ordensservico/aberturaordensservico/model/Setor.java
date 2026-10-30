@@ -20,8 +20,7 @@ public class Setor {
     public Setor() {
     }
 
-    public Setor(Integer id, String nome) {
-        this.id = id;
+    public Setor(String nome) {
         this.nome = nome;
     }
 

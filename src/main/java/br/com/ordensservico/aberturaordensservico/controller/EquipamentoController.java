@@ -60,6 +60,7 @@ public class EquipamentoController {
     @PutMapping ("/{id}")
         public ResponseEntity<Equipamento> atualizar(
             @PathVariable Integer id, 
+            @Valid 
             @RequestBody Equipamento novosDados) {
 
             Optional<Equipamento> equipamentoAtualizado = equipamentoService

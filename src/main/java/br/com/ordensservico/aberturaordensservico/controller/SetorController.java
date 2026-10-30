@@ -55,7 +55,8 @@ public class SetorController {
 
     @PutMapping ("/{id}")
         public ResponseEntity<Setor> atualizar(
-            @PathVariable Integer id, 
+            @PathVariable Integer id,
+            @Valid 
             @RequestBody Setor novosDados) {
 
             Optional<Setor> setorAtualizado = setorService
