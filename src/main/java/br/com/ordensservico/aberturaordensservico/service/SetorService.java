@@ -5,8 +5,7 @@ import org.springframework.stereotype.Service;
 import br.com.ordensservico.aberturaordensservico.model.Setor;
 import br.com.ordensservico.aberturaordensservico.repository.SetorRepository;
 import java.util.Optional;
-import jakarta.validation.Valid;
-import br.com.ordensservico.aberturaordensservico.model.Setor;
+
 
 
 

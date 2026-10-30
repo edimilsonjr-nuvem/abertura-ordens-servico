@@ -8,7 +8,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Table;
 import jakarta.persistence.ManyToOne;
-import br.com.ordensservico.aberturaordensservico.model.Setor;
 
 
 @Entity
@@ -22,10 +21,13 @@ public class Equipamento {
     @NotBlank(message = "O nome é obrigatorio")
     private String nome;
 
+
+    @NotBlank(message = "O numero de patrimonio é obrigatorio")
     private String numeroPatrimonio;
 
     @ManyToOne
     @JoinColumn (name = "setor_id")
+    @NotBlank(message = "O setor é obrigatorio")
     private Setor setor;
 
     public Equipamento() {
