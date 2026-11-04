@@ -1,9 +1,17 @@
 package br.com.ordensservico.aberturaordensservico.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Null;
+
 public class EquipamentoRequest {
     
+    @NotBlank(message = "O nome do equipamento é obrigatório")
     private String nome;
+
+    @NotBlank(message = "O número de patrimônio do equipamento é obrigatório")
     private String numeroPatrimonio;
+
+    @Null (message = "O ID do setor deve ser informado")
     private Integer setorId;
 
     public EquipamentoRequest() {
