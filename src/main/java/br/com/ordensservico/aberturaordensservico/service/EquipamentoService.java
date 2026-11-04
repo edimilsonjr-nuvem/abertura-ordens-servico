@@ -1,24 +1,46 @@
 package br.com.ordensservico.aberturaordensservico.service;
 
 import java.util.List;
-import org.springframework.stereotype.Service; 
-import br.com.ordensservico.aberturaordensservico.repository.EquipamentoRepository;
 import java.util.Optional;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
+import br.com.ordensservico.aberturaordensservico.dto.EquipamentoRequest;
 import br.com.ordensservico.aberturaordensservico.model.Equipamento;
-
-
+import br.com.ordensservico.aberturaordensservico.model.Setor;
+import br.com.ordensservico.aberturaordensservico.repository.EquipamentoRepository;
+import br.com.ordensservico.aberturaordensservico.repository.SetorRepository;
 
 @Service
 public class EquipamentoService {
-    
-    private final EquipamentoRepository equipamentoRepository;
 
-    public EquipamentoService(EquipamentoRepository equipamentoRepository) {
+    private final EquipamentoRepository equipamentoRepository;
+    private final SetorRepository setorRepository;
+
+    public EquipamentoService(
+            EquipamentoRepository equipamentoRepository,
+            SetorRepository setorRepository) {
         this.equipamentoRepository = equipamentoRepository;
+        this.setorRepository = setorRepository;
     }
 
-    public Equipamento cadastrar(Equipamento equipamento) {
-        return equipamentoRepository.save(equipamento);
+    public Optional<Equipamento> cadastrar(EquipamentoRequest dados) {
+
+       Optional<Setor> setorEncontrado =
+                setorRepository.findById(dados.getSetorId());
+
+       if (setorEncontrado.isEmpty()) {
+        return Optional.empty();
+       }
+
+       Equipamento equipamento = new Equipamento();
+       equipamento.setNome(dados.getNome());
+       equipamento.setNumeroPatrimonio(dados.getNumeroPatrimonio());
+       equipamento.setSetor(setorEncontrado.get());
+
+       return Optional.of(equipamentoRepository.save(equipamento));
     }
 
     public List<Equipamento> listar() {
@@ -29,32 +51,54 @@ public class EquipamentoService {
         return equipamentoRepository.findById(id);
     }
 
-    
-    public Optional<Equipamento> atualizar(Integer id, Equipamento novosDados) {
+    public Optional<Equipamento> atualizar(
+            Integer id, EquipamentoRequest novosDados) {
 
-        Optional<Equipamento> equipamentoExistente = equipamentoRepository.findById(id.intValue());
+        Optional<Equipamento> equipamentoExistente =
+                equipamentoRepository.findById(id);
 
-        if (equipamentoExistente.isEmpty()) {
-           return Optional.empty();
+        if (equipamentoExistente.isPresent()) {
+
+            if (novosDados.getSetorId() == null) {
+                throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "O ID do setor não foi informado"
+                );
+            }
+
+            Equipamento equipamento = equipamentoExistente.get();
+
+            equipamento.setNome(novosDados.getNome());
+            equipamento.setNumeroPatrimonio(
+                novosDados.getNumeroPatrimonio()
+            );
+
+            Optional<Setor> setor =
+                    setorRepository.findById(novosDados.getSetorId());
+
+            if (setor.isEmpty()) {
+                throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Setor não encontrado"
+                );
+            }
+
+            equipamento.setSetor(setor.get());
+
+            return Optional.of(equipamentoRepository.save(equipamento));
+
+        } else {
+            return Optional.empty();
         }
-
-        Equipamento equipamento = equipamentoExistente.get();
-
-        equipamento.setNome(novosDados.getNome());
-        equipamento.setNumeroPatrimonio(novosDados.getNumeroPatrimonio());
-        equipamento.setSetor(novosDados.getSetor());
-        return Optional.of(equipamentoRepository.save(equipamento));
-
     }
 
     public boolean excluir(Integer id) {
 
-        if (!equipamentoRepository.existsById(id.intValue())) {
+        if (!equipamentoRepository.existsById(id)) {
             return false;
         }
-        equipamentoRepository.deleteById(id.intValue());
+
+        equipamentoRepository.deleteById(id);
         return true;
     }
-
-
 }
