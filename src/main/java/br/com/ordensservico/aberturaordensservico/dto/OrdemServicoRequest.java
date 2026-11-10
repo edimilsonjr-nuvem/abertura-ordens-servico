@@ -31,10 +31,6 @@ public class OrdemServicoRequest {
         return equipamentoId;
     }
 
-    public void setEquipamentoId(Integer equipamentoId) {
-        this.equipamentoId = equipamentoId;
-    }
-
     
     
 }
