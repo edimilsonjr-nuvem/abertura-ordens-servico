@@ -23,19 +23,26 @@ public class OrdemServico {
     private String descricao;
 
     private LocalDateTime dataAbertura;
+    private LocalDateTime dataEncerramento;
 
     @ManyToOne
     @JoinColumn (name = "equipamento_id") 
     @NotNull (message = "O equipamento é obrigatório")
     private Equipamento equipamento;
 
+
+    @NotBlank (message = "A solução da ordem de serviço é obrigatória")
+    private String solucao;
+
     public OrdemServico() {
     }
 
-    public OrdemServico(String descricao, LocalDateTime dataAbertura, Equipamento equipamento) {
+    public OrdemServico(String descricao, LocalDateTime dataAbertura, LocalDateTime dataEncerramento, Equipamento equipamento, String solucao) {
         this.descricao = descricao;
         this.dataAbertura = dataAbertura;
+        this.dataEncerramento = dataEncerramento;
         this.equipamento = equipamento;
+        this.solucao = solucao;
     }
 
     public Integer getId() {
@@ -58,6 +65,14 @@ public class OrdemServico {
         this.dataAbertura = dataAbertura;
     }
 
+    public LocalDateTime getDataEncerramento() {
+        return dataEncerramento;
+    }
+
+    public void setDataEncerramento(LocalDateTime dataEncerramento) {
+        this.dataEncerramento = dataEncerramento;
+    }
+
     public Equipamento getEquipamento() {
         return equipamento;
     }
@@ -66,5 +81,11 @@ public class OrdemServico {
         this.equipamento = equipamento;
     }
 
-    
+    public String getSolucao() {
+        return solucao;
+    }
+
+    public void setSolucao(String solucao) {
+        this.solucao = solucao;
+    }
 }

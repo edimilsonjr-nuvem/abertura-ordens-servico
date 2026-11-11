@@ -8,7 +8,7 @@ import br.com.ordensservico.aberturaordensservico.model.Equipamento;
 import br.com.ordensservico.aberturaordensservico.dto.OrdemServicoRequest;
 import java.time.LocalDateTime;
 import java.util.List;
-
+import br.com.ordensservico.aberturaordensservico.dto.EncerramentoOrdemServicoRequest;
 
 
 
@@ -44,6 +44,25 @@ public class OrdemServicoService {
 
     public Optional<OrdemServico> buscarPorId(Integer id) {
         return ordemServicoRepository.findById(id);
+    }
+
+    public Optional<OrdemServico> encerrar(Integer id, EncerramentoOrdemServicoRequest dados) {
+        Optional<OrdemServico> ordemServicoOptional = ordemServicoRepository.findById(id);
+
+        if (ordemServicoOptional.isEmpty()) {
+            return Optional.empty();
+        }
+
+        OrdemServico ordemServico = ordemServicoOptional.get();
+        ordemServico.setDataEncerramento(LocalDateTime.now());
+        ordemServico.setSolucao(dados.getSolucao());
+        ordemServicoRepository.save(ordemServico);
+
+        return Optional.of(ordemServico);
+    }
+
+    public List<OrdemServico> listarAbertas() {
+        return ordemServicoRepository.findByDataEncerramentoIsNull();
     }
 
     

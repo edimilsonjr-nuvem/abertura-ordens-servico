@@ -1,5 +1,6 @@
 package br.com.ordensservico.aberturaordensservico.controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,7 +14,7 @@ import br.com.ordensservico.aberturaordensservico.model.OrdemServico;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.web.bind.annotation.PathVariable;
-
+import br.com.ordensservico.aberturaordensservico.dto.EncerramentoOrdemServicoRequest;
 
 @RestController 
 @RequestMapping ("/ordens-servico")
@@ -53,5 +54,23 @@ public class OrdemServicoController {
         }
 
         return ResponseEntity.ok(ordemServico.get());
+    }
+
+    @PatchMapping ("/{id}/encerramento")
+    public ResponseEntity<OrdemServico> encerrar(@PathVariable Integer id, @Valid @RequestBody EncerramentoOrdemServicoRequest dados) {
+        Optional<OrdemServico> ordemServicoEncerrada = ordemServicoService.encerrar(id, dados);
+
+        if (ordemServicoEncerrada.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(ordemServicoEncerrada.get());
+    }
+
+    @GetMapping("/abertas")
+    public ResponseEntity<List<OrdemServico>> listarAbertas() {
+        List<OrdemServico> ordensServicoAbertas = ordemServicoService.listarAbertas();
+
+        return ResponseEntity.ok(ordensServicoAbertas);
     }
 }
